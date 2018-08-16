@@ -5,7 +5,6 @@ var data = require("./data");
 var async  = require("async");
 
 
-var arr = [1,2,3,4,5];
 
 /*
 var obj = new db.Users({ firstName: 'sonu', lastName: 'ahmed', email: "sonu@gmai.com", password: "123" });
