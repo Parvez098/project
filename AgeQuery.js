@@ -1,36 +1,37 @@
 var db = require("./model/mongo");
-var async = require("async");
 
 
 var ages = [];
 var counter = 0;
 var sum = 0;
 var date = new Date();
+var years = [];
 // average age logic
 
 
+// this method find  date of birth year of users 
 
+var dobYear = () => {
 
-function ageAverage() {
     db.UsersProfile.find(function(err, items) {
 
         if (err) {
             console.log("error during insertion");
         } else {
-            async.each(items, function(item) {
 
-
-                var index = item.dob.lastIndexOf("-");
-
-                ages.push(parseInt(item.dob.substring(index + 1)));
+            items.forEach(function(item, index, arr) {
 
                 counter++;
 
-                if (items.length == counter) {
-                    display();
+                years.push(parseInt(item.dob.substring(item.dob.length - 4)));
+
+                if (counter == arr.length) {
+                    averageAge();
                 }
+
             });
 
+           
         }
     });
 
@@ -40,44 +41,41 @@ function ageAverage() {
 
 
 
+// this method find average age of the users . it is assuming that date of birth year will not more than current year
 
-function display() {
 
-    ages.forEach(function(age, index, array) {
+var averageAge = () => {
 
-        sum = sum + age;
-    })
+    years.forEach(function(year) {
 
-    console.log("average age is " + sum / ages.length);
+        sum = sum + (date.getFullYear() - year);
+    });
+
+    console.log("average age is " + sum / years.length);
 }
 
 
+// this function begin the functionality of solving the question 1 problem
 
- ageAverage();
+dobYear(); 
 
 
 
- 
 
 // to remove user who's older than 25
 
 
-function removeUser() {
+var removeUser = () => {
+
     db.UsersProfile.find(function(err, items) {
 
         if (err) {
             console.log("error during retriving");
         } else {
 
-            async.each(items, function(item) {
+            items.forEach(function(item) {
 
-                var index = item.dob.lastIndexOf("-");
-
-                var year = parseInt(item.dob.substring(index + 1));
-
-                var age = date.getFullYear() - year;
-
-                console.log(age);
+                let age = date.getFullYear() - parseInt(item.dob.substring(item.dob.length - 4));
 
                 if (age > 25) {
 
@@ -89,13 +87,16 @@ function removeUser() {
                             console.log("deleted succesfully");
                         }
                     });
+
                 }
-
-
             });
+
+             
         }
     });
 }
 
+
+//this function will solve question number 2 problem . it will delete all user who is more than 25 year . 
 
 removeUser();
