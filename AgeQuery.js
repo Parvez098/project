@@ -1,11 +1,11 @@
 var db = require("./model/mongo");
 
 
-var ages = [];
+let ages = [];
+
 var counter = 0;
-var sum = 0;
-var date = new Date();
-var years = [];
+
+
 
 
 // average age logic
@@ -13,22 +13,25 @@ var years = [];
 
 // this method find  year of date of birth of users 
 
-var dobYear = () => {
+var dobYear = (ages) => {
 
-    db.UsersProfile.find(function(err, items) {
+    db.UsersProfile.find((err, items)=> {
 
         if (err) {
             console.log("error during insertion");
         } else {
 
-            items.forEach(function(item, index, arr) {
+            items.forEach((item, index, arr)=> {
 
                 counter++;
 
-                years.push(parseInt(item.dob.substring(item.dob.length - 4)));
+                let age_date = new Date(Date.now() - new Date(item.dob.year,item.dob.month,item.dob.day).getTime());
 
-                if (counter == arr.length) {
-                    averageAge();
+                ages.push(Math.abs(age_date.getUTCFullYear() - 1970));
+
+                if(counter == items.length)
+                {
+                	averageAge(ages);
                 }
 
             });
@@ -46,20 +49,22 @@ var dobYear = () => {
 // this method find average age of the users . it is assuming that date of birth year will not more than current year
 
 
-var averageAge = () => {
+var averageAge = (ages) => {
 
-    years.forEach(function(year) {
+	let sum = 0; 
 
-        sum = sum + (date.getFullYear() - year);
+    ages.forEach((age)=> {
+
+        sum = sum + age;
     });
 
-    console.log("average age is " + sum / years.length);
+    console.log("average age is " + sum / ages.length);
 }
 
 
 // this function begin the functionality of solving the question 1 problem
 
-dobYear(); 
+dobYear(ages); 
 
 
 
@@ -69,15 +74,17 @@ dobYear();
 
 var removeUser = () => {
 
-    db.UsersProfile.find(function(err, items) {
+    db.UsersProfile.find((err, items)=>{
 
         if (err) {
             console.log("error during retriving");
         } else {
 
-            items.forEach(function(item) {
+            items.forEach((item)=> {
 
-                let age = date.getFullYear() - parseInt(item.dob.substring(item.dob.length - 4));
+                let age_date = new Date(Date.now() - new Date(item.dob.year,item.dob.month,item.dob.day).getTime());
+
+                let age = (Math.abs(age_date.getUTCFullYear() - 1970));
 
                 if (age > 25) {
 
