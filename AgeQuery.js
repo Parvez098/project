@@ -6,10 +6,12 @@ var counter = 0;
 var sum = 0;
 var date = new Date();
 var years = [];
+
+
 // average age logic
 
 
-// this method find  date of birth year of users 
+// this method find  year of date of birth of users 
 
 var dobYear = () => {
 
