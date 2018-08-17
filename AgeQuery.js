@@ -7,7 +7,8 @@ let counter = 0;
 
 
 
-
+const year = 350;
+const age_condition = 25;
 // average age logic
 
 
@@ -31,7 +32,7 @@ let dobYear = (ages) => {
                  let diff_in_days = parseInt((date2 - date1)/(24*60*60*1000));
                  
 
-                 ages.push(parseInt(diff_in_days/365));
+                 ages.push(parseInt(diff_in_days/year));
 
                 if(counter == items.length)
                 {
@@ -93,7 +94,7 @@ let removeUser = () => {
 
 
 
-                if (parseInt(((date2-date1)/(24*60*60*1000))/365) > 25) {
+                if (parseInt(((date2-date1)/(24*60*60*1000))/year) > age_condition) {
 
                     db.UsersProfile.deleteOne({ _id: item._id }, function(err) {
 
