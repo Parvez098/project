@@ -3,7 +3,7 @@ var db = require("./model/mongo");
 
 let ages = [];
 
-var counter = 0;
+let counter = 0;
 
 
 
@@ -13,7 +13,7 @@ var counter = 0;
 
 // this method find  year of date of birth of users 
 
-var dobYear = (ages) => {
+let dobYear = (ages) => {
 
     db.UsersProfile.find((err, items)=> {
 
@@ -25,14 +25,18 @@ var dobYear = (ages) => {
 
                 counter++;
 
-                let age_date = new Date(Date.now() - new Date(item.dob.year,item.dob.month,item.dob.day).getTime());
+                 let date1 = new Date(item.dob);
+                 let date2 = new Date();
 
-                ages.push(Math.abs(age_date.getUTCFullYear() - 1970));
+                 let diff_in_days = parseInt((date2 - date1)/(24*60*60*1000));
+                 
+
+                 ages.push(parseInt(diff_in_days/365));
 
                 if(counter == items.length)
                 {
                 	averageAge(ages);
-                }
+                } 
 
             });
 
@@ -49,7 +53,7 @@ var dobYear = (ages) => {
 // this method find average age of the users . it is assuming that date of birth year will not more than current year
 
 
-var averageAge = (ages) => {
+let averageAge = (ages) => {
 
 	let sum = 0; 
 
@@ -72,7 +76,7 @@ dobYear(ages);
 // to remove user who's older than 25
 
 
-var removeUser = () => {
+let removeUser = () => {
 
     db.UsersProfile.find((err, items)=>{
 
@@ -82,11 +86,14 @@ var removeUser = () => {
 
             items.forEach((item)=> {
 
-                let age_date = new Date(Date.now() - new Date(item.dob.year,item.dob.month,item.dob.day).getTime());
+                let date1 = new Date(item.dob);
+                let date2 = new Date();
 
-                let age = (Math.abs(age_date.getUTCFullYear() - 1970));
+                
 
-                if (age > 25) {
+
+
+                if (parseInt(((date2-date1)/(24*60*60*1000))/365) > 25) {
 
                     db.UsersProfile.deleteOne({ _id: item._id }, function(err) {
 
